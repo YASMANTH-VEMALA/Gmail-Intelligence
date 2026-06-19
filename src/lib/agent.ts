@@ -678,7 +678,7 @@ export async function runAgentConversation(
       systemInstruction,
       generationConfig: {
         thinkingConfig: { thinkingBudget: 0 },
-      },
+      } as any,
     });
 
     const responseContent = result.response.candidates?.[0]?.content;
