@@ -26,7 +26,8 @@ function DashboardContent() {
     activeCategory, searchQuery, currentPage, isThreadView,
     isSyncing, setIsSyncing, clearUser,
     isTerminalOpen, setTerminalOpen,
-    toasts, removeToast
+    toasts, removeToast,
+    sidebarOpen, setSidebarOpen
   } = useAppStore();
 
   const refreshMailbox = useCallback(() => {
@@ -233,6 +234,9 @@ function DashboardContent() {
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <Sidebar />
+      {sidebarOpen && (
+        <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
+      )}
       <EmailList />
       <EmailDetail />
       <ChatPanel />

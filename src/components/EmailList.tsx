@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, LayoutList, MessageSquare, Newspaper, Sparkles } from 'lucide-react';
+import { Search, LayoutList, MessageSquare, Newspaper, Sparkles, Menu } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { formatDate, getCategoryColor, getCategoryLabel } from '@/lib/utils';
 import type { EmailMessage, EmailThread, NewsItem } from '@/types';
@@ -12,7 +12,8 @@ export default function EmailList() {
   const {
     emails, threads, isThreadView, setIsThreadView, searchQuery, setSearchQuery,
     selectedEmail, setSelectedEmail, selectedThread, setSelectedThread, userId,
-    totalEmails, currentPage, setCurrentPage, activeCategory
+    totalEmails, currentPage, setCurrentPage, activeCategory,
+    setSidebarOpen
   } = useAppStore();
 
   const [digestMode, setDigestMode] = useState(false);
@@ -73,9 +74,19 @@ export default function EmailList() {
 
   const totalPages = Math.ceil(totalEmails / 50);
 
+  const hasSelection = Boolean(selectedEmail || selectedThread);
+
   return (
-    <div className="email-list">
-      <div className="email-list-header">
+    <div className={`email-list ${hasSelection ? 'hidden-mobile' : ''}`}>
+      <div className="email-list-header" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <button
+          className="btn-icon mobile-only"
+          onClick={() => setSidebarOpen(true)}
+          title="Open categories"
+          style={{ padding: 6, border: '2px solid var(--border)' }}
+        >
+          <Menu size={16} />
+        </button>
         <div style={{ position: 'relative', flex: 1 }}>
           <Search size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input

@@ -23,7 +23,8 @@ export default function Sidebar() {
     activeCategory, setActiveCategory, categoryCounts, 
     setIsComposing, isSyncing, setIsSyncing, 
     isTerminalOpen, setTerminalOpen,
-    userEmail, userName, userPicture, clearUser
+    userEmail, userName, userPicture, clearUser,
+    sidebarOpen, setSidebarOpen
   } = useAppStore();
 
   const handleSync = async () => {
@@ -69,7 +70,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
       {/* User info */}
       <div style={{ padding: '20px 16px', borderBottom: '2px solid var(--border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -105,7 +106,10 @@ export default function Sidebar() {
           <div
             key={cat.key}
             className={`sidebar-item ${activeCategory === cat.key ? 'active' : ''}`}
-            onClick={() => setActiveCategory(cat.key)}
+            onClick={() => {
+              setActiveCategory(cat.key);
+              setSidebarOpen(false);
+            }}
             id={`sidebar-${cat.key}`}
           >
             <span style={{ color: activeCategory === cat.key ? 'black' : cat.color }}>{cat.icon}</span>

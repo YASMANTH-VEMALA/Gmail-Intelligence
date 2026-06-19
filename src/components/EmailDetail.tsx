@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState, useRef, useEffect, type RefObject } from 'react';
-import { Reply, Sparkles, Mail } from 'lucide-react';
+import { Reply, Sparkles, Mail, ArrowLeft } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 
 import { formatDate, getCategoryColor, getCategoryLabel, stripHtml } from '@/lib/utils';
@@ -156,7 +156,7 @@ function HtmlEmailRenderer({
 }
 
 export default function EmailDetail() {
-  const { selectedEmail, selectedThread, threadMessages, userId, setIsReplying, userEmail } = useAppStore();
+  const { selectedEmail, selectedThread, threadMessages, userId, setIsReplying, userEmail, setSelectedEmail, setSelectedThread } = useAppStore();
   const [summaryResult, setSummaryResult] = useState<{ gmailId: string; summary: string } | null>(null);
   const [threadSummaryResult, setThreadSummaryResult] = useState<{ threadId: string; summary: string } | null>(null);
   const [summarizing, setSummarizing] = useState(false);
@@ -206,7 +206,7 @@ export default function EmailDetail() {
 
   if (!selectedEmail) {
     return (
-      <div className="email-detail">
+      <div className="email-detail hidden-mobile">
         <div className="empty-state">
           <Mail size={48} />
           <div style={{ fontSize: 16 }}>Select an email to read</div>
@@ -293,6 +293,19 @@ export default function EmailDetail() {
   return (
     <div className="email-detail">
       <div className="email-detail-header">
+        {/* Back Button for mobile */}
+        <div className="mobile-only" style={{ marginBottom: 16 }}>
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              setSelectedEmail(null);
+              setSelectedThread(null);
+            }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', fontSize: 12 }}
+          >
+            <ArrowLeft size={16} /> Back to Inbox
+          </button>
+        </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
           <div style={{ flex: 1 }}>
             <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: 'var(--text-primary)' }}>{selectedEmail.subject}</h2>
