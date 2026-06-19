@@ -16,10 +16,10 @@ The interactive assistant operates in two modes: **Ask** (read-only semantic Q&A
 
 ![AI Email Agent Panel](./public/screenshots/chat_agent_panel.png)
 
-### 3. Action Confirmation
-For risky mutations (e.g., sending emails or modifying labels), the agent proposes a structured action that requires manual confirmation before execution, preventing accidental changes.
+### 3. Official Landing Page
+The marketing and landing page is designed using neobrutalism UI style with bold layouts, crisp fonts, flat contrasting colors, and interactive mockups showcasing platform capabilities.
 
-![Agent Confirmation UI](./public/screenshots/agent_error_response.png)
+![Official Landing Page](./public/screenshots/landing_page_official.png)
 
 ---
 
