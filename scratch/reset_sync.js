@@ -1,0 +1,56 @@
+const fs = require('fs');
+const envPath = '/home/yasmanth/Pictures/repeatless/.env.local';
+const envContent = fs.readFileSync(envPath, 'utf-8');
+const env = {};
+envContent.split('\n').forEach(line => {
+  const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+  if (match) {
+    let value = match[2] ? match[2].trim() : '';
+    if (value.startsWith('"') && value.endsWith('"')) value = value.slice(1, -1);
+    if (value.startsWith("'") && value.endsWith("'")) value = value.slice(1, -1);
+    env[match[1]] = value;
+  }
+});
+
+const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
+const headers = {
+  'apikey': serviceKey,
+  'Authorization': `Bearer ${serviceKey}`,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+async function reset() {
+  const userId = 'c3e8436a-a955-43c9-a241-d039ccacfb1f';
+  console.log(`Resetting sync status for user ${userId}...`);
+  
+  const res = await fetch(`${supabaseUrl}/rest/v1/sync_status?user_id=eq.${userId}`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({
+      sync_in_progress: false,
+      phase: 'idle',
+      enumeration_done: false,
+      last_page_token: null,
+      total_discovered: 0,
+      total_hydrated: 0,
+      total_errors: 0,
+      updated_at: new Date().toISOString()
+    })
+  });
+  
+  if (res.ok) {
+    console.log('Successfully reset sync status!');
+    // Also clear the sync queue so we can do a fresh sync
+    const deleteRes = await fetch(`${supabaseUrl}/rest/v1/sync_queue?user_id=eq.${userId}`, {
+      method: 'DELETE',
+      headers
+    });
+    console.log('Cleared sync queue, status:', deleteRes.status);
+  } else {
+    console.error('Failed to reset:', res.status, await res.text());
+  }
+}
+
+reset();
